@@ -46,11 +46,3 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
           tags: "latest,${{ steps.update-version.outputs.version }}"
-
-      - name: Push Helm chart
-        uses: bsord/helm-push@v4
-        with:
-          access-token: ${{ secrets.CM_API_KEY }}
-          registry-url: ${{ secrets.CM_REPO_URL }} 
-          force: true
-          chart-folder: chart
