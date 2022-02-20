@@ -25,6 +25,8 @@ jobs:
           npm version --no-git-tag-version patch
           # Get new bumped version
           PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')
+          # Update chart version
+          sed -r -i "s/(version:[^*]|appVersion:[^*])([[:alnum:].]*)/\1$PACKAGE_VERSION/g" ./chart/Chart.yaml
           # Output new version for other steps
           echo "::set-output name=version::$PACKAGE_VERSION"
           
@@ -44,3 +46,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
           tags: "latest,${{ steps.update-version.outputs.version }}"
+
+      - name: Push Helm chart
+        uses: bsord/helm-push@v4
+        with:
+          access-token: ${{ secrets.CM_API_KEY }}
+          registry-url: ${{ secrets.CM_REPO_URL }} 
+          force: true
+          chart-folder: chart
