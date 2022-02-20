@@ -1,2 +1,1 @@
-# f5-client
-React web app client for F5
+F5-client
