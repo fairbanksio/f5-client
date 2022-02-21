@@ -72,7 +72,7 @@ const PostView = () => {
           <Tr>
             <Th w={1}><ChatIcon  w={4} h={4}/></Th>
             <Th w={1}><ArrowUpIcon w={5} h={5}/></Th>
-            <Th w={1}><TimeIcon w={5} h={5}/></Th>
+            <Th w={1}><TimeIcon w={4} h={4}/></Th>
             <Th>Title</Th>
             <Th>Source</Th>
             <Th>Action</Th>
@@ -112,6 +112,7 @@ const PostView = () => {
           <Tr>
             <Th w={1}><ChatIcon  w={4} h={4}/></Th>
             <Th w={1}><ArrowUpIcon w={5} h={5}/></Th>
+            <Th w={1}><TimeIcon w={4} h={4}/></Th>
             <Th>Title</Th>
             <Th>Source</Th>
             <Th>Action</Th>
