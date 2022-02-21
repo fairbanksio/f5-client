@@ -14,16 +14,32 @@ import {
 import { RepeatIcon } from '@chakra-ui/icons'
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { RefreshIntervalContext } from '../Contexts/RefreshIntervalContext'
+import { SubredditContext } from '../Contexts/SubredditContext'
 
 
 const Header = () => {
   const { refreshInterval, setRefreshInterval } = useContext(RefreshIntervalContext)
-
+  const { subreddit, setSubreddit } = useContext(SubredditContext)
+  
   return (
     <Container maxW='container.xl' >
       <Grid templateColumns='repeat(3, 1fr)' gap={6}>
+
         <GridItem w='100%'><Heading size='xl'>F5</Heading></GridItem>
-        <GridItem w='100%'><Center>r/politics</Center></GridItem>
+
+        <GridItem w='100%' >
+          <Center>
+            <Menu>
+            <MenuButton size={'sm'} as={Button}  rightIcon={<RepeatIcon />}>r/{subreddit}</MenuButton>
+            <MenuList>
+              <MenuItem onClick={(e)=>{setSubreddit('superstonk')}}>r/superstonk</MenuItem>
+              <MenuItem onClick={(e)=>{setSubreddit('politics')}}>r/politics</MenuItem>
+              <MenuItem onClick={(e)=>{setSubreddit('all')}}>r/all</MenuItem>
+            </MenuList>
+          </Menu>
+          </Center>
+        </GridItem>
+
         <GridItem w='100%' textAlign="right">
           <Menu>
             <MenuButton size={'sm'} as={Button}  rightIcon={<RepeatIcon />}>{refreshInterval}s</MenuButton>
@@ -36,6 +52,7 @@ const Header = () => {
             </MenuList>
           </Menu>
         </GridItem>
+
       </Grid>
     </Container>
   );
