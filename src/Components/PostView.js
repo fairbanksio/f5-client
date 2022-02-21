@@ -94,7 +94,7 @@ const PostView = () => {
                   </Td>
                   <Td>{item.domain}</Td>
                   <Td>
-                    <Link href={item.commentLink}>
+                    <Link href={'https://reddit.com/' + item.commentLink} isExternal>
                       <ChatIcon/>
                     </Link>
                     &nbsp;
