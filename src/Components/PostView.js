@@ -11,7 +11,8 @@ import {
   Th,
   Link,
   Text,
-  Progress
+  Progress,
+  Tooltip
 } from '@chakra-ui/react';
 import { LinkIcon, ChatIcon, ArrowUpIcon, TimeIcon } from '@chakra-ui/icons'
 import { RefreshIntervalContext } from '../Contexts/RefreshIntervalContext'
@@ -88,9 +89,11 @@ const PostView = () => {
                   <Td>{item.upvoteCount}</Td>
                   <Td>{timeAgoShort(item.created_utc)}</Td>
                   <Td>
-                    <Link href={item.url} isExternal>
-                    <Text noOfLines={3}>{item.title}</Text>
-                    </Link>
+                    <Tooltip label={item.title} fontSize='md'>
+                      <Link href={item.url} isExternal>
+                        <Text noOfLines={3}>{item.title}</Text>
+                      </Link>
+                    </Tooltip>
                   </Td>
                   <Td>{item.domain}</Td>
                   <Td>
