@@ -90,18 +90,18 @@ const PostView = () => {
                   <Td>{timeAgoShort(item.created_utc)}</Td>
                   <Td>
                     <Tooltip label={item.title} fontSize='md'>
-                      <Link href={item.url} isExternal>
+                      <Link href={item.url} isExternal color='link'>
                         <Text noOfLines={3}>{item.title}</Text>
                       </Link>
                     </Tooltip>
                   </Td>
                   <Td>{item.domain}</Td>
                   <Td>
-                    <Link href={'https://reddit.com/' + item.commentLink} isExternal>
+                    <Link href={'https://reddit.com/' + item.commentLink} isExternal color='link'>
                       <ChatIcon/>
                     </Link>
                     &nbsp;
-                    <Link href={item.url}>
+                    <Link href={item.url} color='link'>
                       <LinkIcon/>
                     </Link>
                   </Td>
