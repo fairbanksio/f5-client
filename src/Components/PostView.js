@@ -15,19 +15,21 @@ import {
 } from '@chakra-ui/react';
 import { LinkIcon, ChatIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import { RefreshIntervalContext } from '../Contexts/RefreshIntervalContext'
+import { SubredditContext } from '../Contexts/SubredditContext'
 const apiEndpoint = process.env.REACT_APP_API ? process.env.REACT_APP_API : window.REACT_APP_API
 
 
 
 const PostView = () => {
   const { refreshInterval } = useContext(RefreshIntervalContext)
+  const { subreddit } = useContext(SubredditContext)
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true)
 
   const fetchMetrics = () => {
     setLoading(true)
-    fetch(apiEndpoint)
+    fetch(apiEndpoint + '/?sub=' + subreddit)
     .then((response) => response.json())
     .then((json) => {
       setData(json)
@@ -41,12 +43,12 @@ const PostView = () => {
       const interval = setInterval(fetchMetrics, refreshInterval*1000);
       return () => clearInterval(interval);
     }
-  }, [refreshInterval]);
+  }, [refreshInterval, subreddit]);
 
   // call only on load/refresh
   useEffect(() => {
     fetchMetrics()
-  }, []);
+  }, [subreddit]);
 
   const hotnessBGColor = (upvoteCount) => {
     if (upvoteCount >= 100 && upvoteCount < 250) {
