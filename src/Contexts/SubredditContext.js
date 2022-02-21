@@ -8,11 +8,12 @@ export const SubredditContext = React.createContext({
 export const SubredditProvider = (props) => {
 
   const setSubreddit = (subreddit) => {
+    localStorage.setItem('subreddit', subreddit)
     setState({...state, subreddit: subreddit})
   }
 
   const initState = {
-    subreddit: 'politics',
+    subreddit: localStorage.getItem('subreddit') ? localStorage.getItem('subreddit') : 'politics',
     setSubreddit: setSubreddit
   } 
 
