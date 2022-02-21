@@ -11,7 +11,7 @@ import {
   Heading,
   Center
 } from '@chakra-ui/react';
-import { RepeatIcon } from '@chakra-ui/icons'
+import { RepeatIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { RefreshIntervalContext } from '../Contexts/RefreshIntervalContext'
 import { SubredditContext } from '../Contexts/SubredditContext'
@@ -28,15 +28,15 @@ const Header = () => {
         <GridItem w='100%'><Heading size='xl'>F5</Heading></GridItem>
 
         <GridItem w='100%' >
-          <Center>
+          <Center h='100%'>
             <Menu>
-            <MenuButton size={'sm'} as={Button}  rightIcon={<RepeatIcon />}>r/{subreddit}</MenuButton>
-            <MenuList>
-              <MenuItem onClick={(e)=>{setSubreddit('superstonk')}}>r/superstonk</MenuItem>
-              <MenuItem onClick={(e)=>{setSubreddit('politics')}}>r/politics</MenuItem>
-              <MenuItem onClick={(e)=>{setSubreddit('all')}}>r/all</MenuItem>
-            </MenuList>
-          </Menu>
+              <MenuButton size={'sm'} as={Button} rightIcon={<ChevronDownIcon />}>r/{subreddit}</MenuButton>
+              <MenuList>
+                <MenuItem onClick={(e)=>{setSubreddit('superstonk')}}>r/superstonk</MenuItem>
+                <MenuItem onClick={(e)=>{setSubreddit('politics')}}>r/politics</MenuItem>
+                <MenuItem onClick={(e)=>{setSubreddit('all')}}>r/all</MenuItem>
+              </MenuList>
+            </Menu>
           </Center>
         </GridItem>
 

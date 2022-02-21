@@ -13,9 +13,10 @@ import {
   Text,
   Progress
 } from '@chakra-ui/react';
-import { LinkIcon, ChatIcon, ArrowUpIcon } from '@chakra-ui/icons'
+import { LinkIcon, ChatIcon, ArrowUpIcon, TimeIcon } from '@chakra-ui/icons'
 import { RefreshIntervalContext } from '../Contexts/RefreshIntervalContext'
 import { SubredditContext } from '../Contexts/SubredditContext'
+import { timeAgoShort } from '../Util/FormattedTime'
 const apiEndpoint = process.env.REACT_APP_API ? process.env.REACT_APP_API : window.REACT_APP_API
 
 
@@ -71,6 +72,7 @@ const PostView = () => {
           <Tr>
             <Th w={1}><ChatIcon  w={4} h={4}/></Th>
             <Th w={1}><ArrowUpIcon w={5} h={5}/></Th>
+            <Th w={1}><TimeIcon w={5} h={5}/></Th>
             <Th>Title</Th>
             <Th>Source</Th>
             <Th>Action</Th>
@@ -84,6 +86,7 @@ const PostView = () => {
                 <Tr key={i} bg={hotnessBGColor(item.upvoteCount)}>
                   <Td>{item.commentCount}</Td>
                   <Td>{item.upvoteCount}</Td>
+                  <Td>{timeAgoShort(item.created_utc)}</Td>
                   <Td>
                     <Link href={item.url} isExternal>
                     <Text noOfLines={3}>{item.title}</Text>
@@ -91,7 +94,7 @@ const PostView = () => {
                   </Td>
                   <Td>{item.domain}</Td>
                   <Td>
-                    <Link href={item.commentLink}>
+                    <Link href={'https://reddit.com/' + item.commentLink} isExternal>
                       <ChatIcon/>
                     </Link>
                     &nbsp;
