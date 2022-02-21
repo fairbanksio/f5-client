@@ -1,8 +1,7 @@
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en.json'
-
+TimeAgo.addDefaultLocale(en)
 export const timeAgoShort = (timestamp) =>{
-  TimeAgo.addDefaultLocale(en)
-  const timeAgo = new TimeAgo('en-US')
+  const timeAgo = new TimeAgo()
   return timeAgo.format(new Date(timestamp*1000), 'twitter')
 }
