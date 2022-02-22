@@ -15,19 +15,6 @@ import { ThemeProvider, ThemeContext } from './Contexts/ThemeContext'
 
 const ThemedApp = () => {
   const { theme } = useContext(ThemeContext)
-  const themeObject = (theme) => {
-    console.log(theme)
-    switch(theme){
-      
-      default: 
-        return ClassicTheme
-      case 'custom':
-        return CustomTheme
-      case 'classic':
-        return ClassicTheme
-    }
-  }
-
 
   return (
       <ChakraProvider theme={theme == 'classic' ? ClassicTheme : CustomTheme}>
