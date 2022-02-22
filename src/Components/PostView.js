@@ -18,9 +18,8 @@ import { LinkIcon, ChatIcon, ArrowUpIcon, TimeIcon } from '@chakra-ui/icons'
 import { RefreshIntervalContext } from '../Contexts/RefreshIntervalContext'
 import { SubredditContext } from '../Contexts/SubredditContext'
 import { timeAgoShort } from '../Util/FormattedTime'
+
 const apiEndpoint = process.env.REACT_APP_API ? process.env.REACT_APP_API : window.REACT_APP_API
-
-
 
 const PostView = () => {
   const { refreshInterval } = useContext(RefreshIntervalContext)

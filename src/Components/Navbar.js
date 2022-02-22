@@ -43,7 +43,7 @@ export default function Nav() {
   const { subreddit, setSubreddit } = useContext(SubredditContext)
   return (
 
-    <Box bg={useColorModeValue('gray.300', 'gray.900')} >
+    <Box>
       <Container maxW='container.xl'>
       <Flex h={12} alignItems={'center'} justifyContent={'space-between'}>
         <Box><Text fontSize={'xl'}>&#128293; F5oclock</Text></Box>
