@@ -25,10 +25,24 @@ import { timeAgoShort } from '../Util/FormattedTime'
 const apiEndpoint = process.env.REACT_APP_API ? process.env.REACT_APP_API : window.REACT_APP_API
 
 const gtThan5MinsAgo = (date) => {
-  const FIVE_MINS = 1000 * 60 * 2;
+  const FIVE_MINS = 1000 * 60 * 1;
   const fiveMinsAgo = Date.now() - FIVE_MINS;
-  console.log(fiveMinsAgo)
   return new Date(date).getTime() < fiveMinsAgo;
+}
+
+const findLatestFetch = (posts) => {
+  let latestFetch
+  for(let i = 0; i < posts.length; i++){
+    let currentPostFetchedAt = new Date(posts[i].fetchedAt).getTime()
+
+    if(latestFetch == null){
+      latestFetch = currentPostFetchedAt
+    } else if (currentPostFetchedAt > latestFetch) {
+      latestFetch = currentPostFetchedAt
+    }
+    
+  }
+  return latestFetch
 }
 
 const PostView = () => {
@@ -41,7 +55,7 @@ const PostView = () => {
 
   
 
-  const fetchMetrics = () => {
+  const fetchPosts = () => {
     setLoading(true)
     fetch(apiEndpoint + '/?sub=' + subreddit)
     .then((response) => response.json())
@@ -50,8 +64,8 @@ const PostView = () => {
       setTimeout(() => {setLoading(false)}, 1700);
       setError({show:false})
 
-      if(gtThan5MinsAgo(json.posts[0].fetchedAt)){
-        setError({level:"warning", show: true, title: "Delayed Data:", message: "Content may be out of date.. This may be due to reddit api being down."})
+      if(gtThan5MinsAgo(findLatestFetch(json.posts))){
+        setError({level:"warning", show: true, title: "Delayed Data:", message: "Content may be out of date.. This may be due to Reddit's experiencing issues."})
       }
 
     })
@@ -63,14 +77,14 @@ const PostView = () => {
   // call every interval to api
   useEffect(() => {
     if (refreshInterval && refreshInterval > 0) {
-      const interval = setInterval(fetchMetrics, refreshInterval*1000);
+      const interval = setInterval(fetchPosts, refreshInterval*1000);
       return () => clearInterval(interval);
     }
   }, [refreshInterval, subreddit]);
 
   // call only on load/refresh
   useEffect(() => {
-    fetchMetrics()
+    fetchPosts()
   }, [subreddit]);
 
   const hotnessBGColor = (upvoteCount) => {
