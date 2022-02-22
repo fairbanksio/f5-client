@@ -11,15 +11,15 @@ import {
   Th,
   Link,
   Text,
-  Progress
+  Progress,
+  Tooltip
 } from '@chakra-ui/react';
 import { LinkIcon, ChatIcon, ArrowUpIcon, TimeIcon } from '@chakra-ui/icons'
 import { RefreshIntervalContext } from '../Contexts/RefreshIntervalContext'
 import { SubredditContext } from '../Contexts/SubredditContext'
 import { timeAgoShort } from '../Util/FormattedTime'
+
 const apiEndpoint = process.env.REACT_APP_API ? process.env.REACT_APP_API : window.REACT_APP_API
-
-
 
 const PostView = () => {
   const { refreshInterval } = useContext(RefreshIntervalContext)
@@ -72,7 +72,7 @@ const PostView = () => {
           <Tr>
             <Th w={1}><ChatIcon  w={4} h={4}/></Th>
             <Th w={1}><ArrowUpIcon w={5} h={5}/></Th>
-            <Th w={1}><TimeIcon w={5} h={5}/></Th>
+            <Th w={1}><TimeIcon w={4} h={4}/></Th>
             <Th>Title</Th>
             <Th>Source</Th>
             <Th>Action</Th>
@@ -88,17 +88,19 @@ const PostView = () => {
                   <Td>{item.upvoteCount}</Td>
                   <Td>{timeAgoShort(item.created_utc)}</Td>
                   <Td>
-                    <Link href={item.url} isExternal>
-                    <Text noOfLines={3}>{item.title}</Text>
-                    </Link>
+                    <Tooltip label={item.title} fontSize='md'>
+                      <Link href={item.url} isExternal color='link'>
+                        <Text noOfLines={3}>{item.title}</Text>
+                      </Link>
+                    </Tooltip>
                   </Td>
                   <Td>{item.domain}</Td>
                   <Td>
-                    <Link href={'https://reddit.com/' + item.commentLink} isExternal>
+                    <Link href={'https://reddit.com/' + item.commentLink} isExternal color='link'>
                       <ChatIcon/>
                     </Link>
                     &nbsp;
-                    <Link href={item.url}>
+                    <Link href={item.url} color='link'>
                       <LinkIcon/>
                     </Link>
                   </Td>
@@ -112,6 +114,7 @@ const PostView = () => {
           <Tr>
             <Th w={1}><ChatIcon  w={4} h={4}/></Th>
             <Th w={1}><ArrowUpIcon w={5} h={5}/></Th>
+            <Th w={1}><TimeIcon w={4} h={4}/></Th>
             <Th>Title</Th>
             <Th>Source</Th>
             <Th>Action</Th>

@@ -8,11 +8,12 @@ export const RefreshIntervalContext = React.createContext({
 export const RefreshIntervalProvider = (props) => {
 
   const setRefreshInterval = (refreshInterval) => {
+    localStorage.setItem('refreshInterval', refreshInterval)
     setState({...state, refreshInterval: refreshInterval})
   }
 
   const initState = {
-    refreshInterval: 30,
+    refreshInterval: localStorage.getItem('refreshInterval') ? localStorage.getItem('refreshInterval') : 30,
     setRefreshInterval: setRefreshInterval
   } 
 
