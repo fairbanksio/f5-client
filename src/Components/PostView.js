@@ -12,7 +12,10 @@ import {
   Link,
   Text,
   Progress,
-  Tooltip
+  Tooltip,Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
 } from '@chakra-ui/react';
 import { LinkIcon, ChatIcon, ArrowUpIcon, TimeIcon } from '@chakra-ui/icons'
 import { RefreshIntervalContext } from '../Contexts/RefreshIntervalContext'
@@ -21,12 +24,22 @@ import { timeAgoShort } from '../Util/FormattedTime'
 
 const apiEndpoint = process.env.REACT_APP_API ? process.env.REACT_APP_API : window.REACT_APP_API
 
+const gtThan5MinsAgo = (date) => {
+  const FIVE_MINS = 1000 * 60 * 2;
+  const fiveMinsAgo = Date.now() - FIVE_MINS;
+  console.log(fiveMinsAgo)
+  return new Date(date).getTime() < fiveMinsAgo;
+}
+
 const PostView = () => {
   const { refreshInterval } = useContext(RefreshIntervalContext)
   const { subreddit } = useContext(SubredditContext)
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState({level: 'warning', show: false, title: 'Warning:', message: "There was a problem"})
+
+  
 
   const fetchMetrics = () => {
     setLoading(true)
@@ -35,8 +48,17 @@ const PostView = () => {
     .then((json) => {
       setData(json.posts)
       setTimeout(() => {setLoading(false)}, 1700);
-      
-    });
+      setError({show:false})
+
+      if(gtThan5MinsAgo(json.posts[0].fetchedAt)){
+        setError({level:"warning", show: true, title: "Delayed Data:", message: "Content may be out of date.. This may be due to reddit api being down."})
+      }
+
+    })
+    .catch((error) => {
+      setError({level:"error", show: true, title: "Ooops:", message: "There was a problem fetching new posts. Retrying.."})
+      setLoading(false)
+    });;
   }
   // call every interval to api
   useEffect(() => {
@@ -65,62 +87,76 @@ const PostView = () => {
 
   return (
     <Container maxW='container.xl' >
-      {loading? <Progress size='xs' isIndeterminate />:<Progress value={0} size='xs' />}
-      <Table size='sm' textAlign="left">
-        <TableCaption></TableCaption>
-        <Thead>
-          <Tr>
-            <Th w={1}><ChatIcon  w={4} h={4}/></Th>
-            <Th w={1}><ArrowUpIcon w={5} h={5}/></Th>
-            <Th w={1}><TimeIcon w={4} h={4}/></Th>
-            <Th>Title</Th>
-            <Th>Source</Th>
-            <Th>Action</Th>
-          </Tr>
-        </Thead>
+      {loading?
+        <Progress size='xs' isIndeterminate />:<Progress value={0} size='xs' />}
 
-        <Tbody>
-          {
-          data.map((item, i) => {
-            return [
-                <Tr key={i} bg={hotnessBGColor(item.upvoteCount)}>
-                  <Td>{item.commentCount}</Td>
-                  <Td>{item.upvoteCount}</Td>
-                  <Td>{timeAgoShort(item.created_utc)}</Td>
-                  <Td>
-                    <Tooltip label={item.title} fontSize='md'>
-                      <Link href={item.url} isExternal color='link'>
-                        <Text noOfLines={3}>{item.title}</Text>
+      {error.show? 
+        <Alert status={error.level}>
+          <AlertIcon />
+          <AlertTitle mr={2}>{error.title}</AlertTitle>
+          <AlertDescription>{error.message}</AlertDescription>
+        </Alert>
+      : null}
+
+      {data && data.length > 0 ?
+        <Table size='sm' textAlign="left">
+
+          <Thead>
+            <Tr>
+              <Th w={1}><ChatIcon  w={4} h={4}/></Th>
+              <Th w={1}><ArrowUpIcon w={5} h={5}/></Th>
+              <Th w={1}><TimeIcon w={4} h={4}/></Th>
+              <Th>Title</Th>
+              <Th>Source</Th>
+              <Th>Action</Th>
+            </Tr>
+          </Thead>
+
+          <Tbody>
+            {
+            data.map((item, i) => {
+              return [
+                  <Tr key={i} bg={hotnessBGColor(item.upvoteCount)}>
+                    <Td>{item.commentCount}</Td>
+                    <Td>{item.upvoteCount}</Td>
+                    <Td>{timeAgoShort(item.created_utc)}</Td>
+                    <Td>
+                      <Tooltip label={item.title} fontSize='md'>
+                        <Link href={item.url} isExternal color='link'>
+                          <Text noOfLines={3}>{item.title}</Text>
+                        </Link>
+                      </Tooltip>
+                    </Td>
+                    <Td>{item.domain}</Td>
+                    <Td>
+                      <Link href={'https://reddit.com/' + item.commentLink} isExternal color='link'>
+                        <ChatIcon/>
                       </Link>
-                    </Tooltip>
-                  </Td>
-                  <Td>{item.domain}</Td>
-                  <Td>
-                    <Link href={'https://reddit.com/' + item.commentLink} isExternal color='link'>
-                      <ChatIcon/>
-                    </Link>
-                    &nbsp;
-                    <Link href={item.url} color='link'>
-                      <LinkIcon/>
-                    </Link>
-                  </Td>
-                </Tr>
-              ];
-          })
-          }
-        </Tbody>
+                      &nbsp;
+                      <Link href={item.url} color='link'>
+                        <LinkIcon/>
+                      </Link>
+                    </Td>
+                  </Tr>
+                ];
+            })
+            }
+          </Tbody>
 
-        <Tfoot>
-          <Tr>
-            <Th w={1}><ChatIcon  w={4} h={4}/></Th>
-            <Th w={1}><ArrowUpIcon w={5} h={5}/></Th>
-            <Th w={1}><TimeIcon w={4} h={4}/></Th>
-            <Th>Title</Th>
-            <Th>Source</Th>
-            <Th>Action</Th>
-          </Tr>
-        </Tfoot>
-      </Table>
+          <Tfoot>
+            <Tr>
+              <Th w={1}><ChatIcon  w={4} h={4}/></Th>
+              <Th w={1}><ArrowUpIcon w={5} h={5}/></Th>
+              <Th w={1}><TimeIcon w={4} h={4}/></Th>
+              <Th>Title</Th>
+              <Th>Source</Th>
+              <Th>Action</Th>
+            </Tr>
+          </Tfoot>
+
+        </Table>
+      :null}
+
     </Container>
   );
 }
