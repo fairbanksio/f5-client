@@ -33,7 +33,7 @@ const PostView = () => {
     fetch(apiEndpoint + '/?sub=' + subreddit)
     .then((response) => response.json())
     .then((json) => {
-      setData(json)
+      setData(json.posts)
       setTimeout(() => {setLoading(false)}, 1700);
       
     });
